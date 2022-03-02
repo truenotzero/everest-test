@@ -32,3 +32,25 @@ struct test* register_tests() {
 ```
 
 Compile & run
+
+## Including testing as part of the automated build process
+Create a makefile like so:
+```Makefile
+# you must define: 
+CC=
+CFLAGS=
+LDFLAGS=
+
+TEST_SRC_DIR=path/to/tests
+TEST_BIN_DIR=path/to/tests/binaries
+
+
+# The implicit rule for compiling C files is
+# removed in test.makefile, therefore, you must
+# re-implement it. Take note that `$(TEST_BIN_DIR)/%.test
+# is required as a dependency
+%.o: %.c $(TEST_BIN_DIR)/%.test
+	$(CC) $(CFLAGS) -c $< -o $@
+
+include test.makefile
+```
