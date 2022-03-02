@@ -34,6 +34,7 @@ struct test* register_tests() {
 Compile & run
 
 ## Including testing as part of the automated build process
+Note that doing this will require you to define a test file for every source you have, even if it's a dummy file
 Create a makefile like so:
 ```Makefile
 # you must define: 
@@ -41,6 +42,7 @@ CC=
 CFLAGS=
 LDFLAGS=
 
+SRC_DIR=path/to/sources
 TEST_SRC_DIR=path/to/tests
 TEST_BIN_DIR=path/to/tests/binaries
 

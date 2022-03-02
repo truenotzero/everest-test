@@ -6,6 +6,17 @@
 
 #include <stdio.h>
 
+#define TEST_UNUSED_INIT()                                                     \
+  void init() {}
+#define TEST_UNUSED_CLEANUP()                                                  \
+  void cleanup() {}
+#define TEST_UNUSED_FILE()                                                     \
+  TEST_UNUSED_INIT()                                                           \
+  TEST_UNUSED_CLEANUP()                                                        \
+  struct test *register_tests() {                                              \
+    return 0;                                                                  \
+  }
+
 typedef int (*p_test_f)();
 
 struct test {
@@ -24,6 +35,8 @@ void cleanup();
 
 int main() {
   struct test *tests = register_tests();
+  if (!tests)
+    return 0;
   init();
   cleanup();
 
