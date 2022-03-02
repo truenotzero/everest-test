@@ -17,6 +17,11 @@
     return 0;                                                                  \
   }
 
+#define TEST_EQ(a, b) (a) - (b)
+#define TEST_NEQ(a, b) (a) == (b)
+#define OR *
+#define AND +
+
 typedef int (*p_test_f)();
 
 struct test {
@@ -33,12 +38,18 @@ struct test *register_tests();
 void init();
 void cleanup();
 
-int main() {
+#define print(s, ...) printf("[everest/test] " s, __VA_ARGS__)
+
+int main(int argc, char *argv[]) {
   struct test *tests = register_tests();
   if (!tests)
     return 0;
   init();
   cleanup();
+
+  if (argc < 1)
+    return 0;
+  print("Running suite: %s\n", argv[0]);
 
   // count tests
   unsigned num_tests;
@@ -48,12 +59,10 @@ int main() {
   for (unsigned i = 0; i < num_tests; ++i) {
     char const *name = tests[i].name;
     p_test_f f = tests[i].func;
-    printf("[%d/%d] %s => ", i + 1, num_tests, name);
     int result = f();
-    if (result == 0) {
-      printf("Pass\n");
-    } else {
-      printf("Fail (%d)\n", result);
+    print("[%02d/%02d] %s <== %s\n", i + 1, num_tests, result ? "Fail" : "Pass",
+          name);
+    if (result) {
       return result;
     }
   }
